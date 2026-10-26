@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>我的 Todo</title>
+</head>
+<body>
+  <h1>📝 我的任务</h1>
+
+  <!-- 登录区 -->
+  <input id="username" placeholder="用户名">
+  <input id="password" type="password" placeholder="密码">
+  <button onclick="login()">登录</button>
+
+  <!-- 任务区 -->
+  <div>
+    <input id="new-title" placeholder="要做点什么？">
+    <button onclick="addTodo()">添加</button>
+  </div>
+  <ul id="todo-list"></ul>
+
+  <script src="/app.js"></script>
+</body>
+</html>
