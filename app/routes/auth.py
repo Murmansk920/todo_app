@@ -5,9 +5,9 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from app.service.todos import find_user, add_user
 
-auth_bp = Blueprint("auth", __name__)
+old_auth_bp = Blueprint("auth", __name__)
 
-@auth_bp.route("/register", methods=["POST"])
+@old_auth_bp.route("/register", methods=["POST"])
 def user_register():
     username = request.json.get("username")
     password = request.json.get("password")
@@ -19,7 +19,7 @@ def user_register():
         return {"id": username, "message": "创建成功"}, 201
     abort(409)
 
-@auth_bp.route("/login", methods=["POST"])
+@old_auth_bp.route("/login", methods=["POST"])
 def login():
     data = request.json or {}
     username = data.get("username")

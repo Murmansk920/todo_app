@@ -3,15 +3,15 @@ from flask import Blueprint, jsonify, request, abort, g
 from app.service.todos import find_all_todo, add_todo, update_todo, delete_todo, complete_todo
 from app.utils.auth import auth_required
 
-todo_bp = Blueprint("todo", __name__)
+old_todo_bp = Blueprint("todo", __name__)
 
-todo_bp.before_request(auth_required)
+old_todo_bp.before_request(auth_required)
 
-@todo_bp.route("/todos")
+@old_todo_bp.route("/todos")
 def todo_list():
     return jsonify([todo for todo in find_all_todo()])
 
-@todo_bp.route("/todos", methods=["POST"])
+@old_todo_bp.route("/todos", methods=["POST"])
 def add_one_todo():
     title = request.json.get("title")
     added = add_todo(title)
@@ -20,7 +20,7 @@ def add_one_todo():
     else:
         abort(500)
 
-@todo_bp.route("/todos/<int:id>", methods=["PUT"])
+@old_todo_bp.route("/todos/<int:id>", methods=["PUT"])
 def change_todo(id):
     data = request.get_json(silent=True) or {}
     fields, values = [], []
@@ -35,12 +35,12 @@ def change_todo(id):
     update_todo(fields, values)
     return {"message": "更新成功"}
 
-@todo_bp.route("/todos/<int:id>", methods=["DELETE"])
+@old_todo_bp.route("/todos/<int:id>", methods=["DELETE"])
 def delete_todos(id):
     delete_todo(id)
     return '',204
 
-@todo_bp.route("/todos/<int:id>")
+@old_todo_bp.route("/todos/<int:id>")
 def get_status_todo(id):
     return jsonify(complete_todo(id))
 

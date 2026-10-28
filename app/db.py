@@ -1,5 +1,5 @@
 from dbutils.pooled_db import PooledDB
-from flask import current_app, g
+from flask import current_app
 import pymysql
 
 
