@@ -11,7 +11,7 @@ from app.routes.orm_todos import todo_bp
 # from app.routes.todos import old_todo_bp
 from config import config
 
-def create_app(test_config,config_name="default"):
+def create_app(test_config = False,config_name="default"):
 
     """应用工厂：按需创建、配置 Flask 实例"""
     app = Flask(__name__,static_folder="../static",static_url_path="/")
@@ -27,8 +27,8 @@ def create_app(test_config,config_name="default"):
 
     db.init_app(app)
 
-    from flask_cors import CORS
-    CORS(app)
+    # from flask_cors import CORS
+    # CORS(app)
 
     logging.basicConfig(
         level=logging.INFO,

@@ -16,10 +16,10 @@ def register_error_handlers(app):
     def conflict(error):
         return jsonify({"error":"用户已存在", "code": 409}), 409
 
-    # @app.errorhandler(Exception)
-    # def internal_error(error):
-    #     if g and g.current_user_id:
-    #         app.logger.error(f"服务器错误: {error}-curent_user_id={g.current_user_id}")  # 记录日志
-    #     else:
-    #         app.logger.error(f"服务器错误: {error}")
-    #     return jsonify({"error": "服务器内部错误", "code": 500}), 500
+    @app.errorhandler(Exception)
+    def internal_error(error):
+        if g and getattr(g, 'current_user_id', None):
+            app.logger.error(f"服务器错误: {error}-curent_user_id={g.current_user_id}")  # 记录日志
+        else:
+            app.logger.error(f"服务器错误: {error}")
+        return jsonify({"error": "服务器内部错误", "code": 500}), 500

@@ -1,0 +1,53 @@
+services:
+  # 1. 定义 MySQL 数据库服务
+  db:
+    image: mysql:latest
+    container_name: todo-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 111111  # 请改成你自己的密码
+      MYSQL_DATABASE: todo_app            # 你的数据库名
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql:ro   # 首次启动自动建表
+    healthcheck:
+      test: [ "CMD-SHELL", "mysql --host=127.0.0.1 --port=3306 --user=root --password=$$MYSQL_ROOT_PASSWORD -e 'SELECT 1'" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
+
+  # 2. 定义 Flask 应用服务
+  web:
+    build: .
+    container_name: todo-app
+    restart: always
+    ports:
+      - "5000:5000"
+    environment:
+      # 新增的 SECRET_KEY
+      - SECRET_KEY=dev-secret-keydev-secret-keydev-secret-keydev-secret-keydev-secret-keydev-secret-key
+      # 数据库配置
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_NAME=todo_app
+      - DB_USER=root
+      - DB_PASSWORD=111111
+    depends_on:
+      db:
+        condition: service_healthy
+
+  nginx:
+    build: ../frontend              # 👈 改成这样，指向你的前端目录
+    container_name: todo-nginx
+    restart: always
+    ports:
+        - "8080:80"
+    depends_on:
+        - web   # 如果静态页面要调用 web 的 API，保留这个；纯静态可删掉
+
+# 3. 定义数据卷，防止重启后数据丢失
+volumes:
+  mysql_data:

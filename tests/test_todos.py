@@ -27,3 +27,21 @@ def test_isolation_between_users(client):
     client.post("/api/todos", json={"title": "A 的秘密任务"}, headers=headers_a)
     data_b = client.get("/api/todos", headers=headers_b).get_json()
     assert data_b["total"] == 0              # B 的世界里一无所有
+
+def test_update_todo(client, auth_headers):
+    client.post("/api/todos", json={"title": "title"}, headers=auth_headers)
+    data = client.get("/api/todos", headers=auth_headers).get_json()
+    to_id = data.get("items")[0].get('id')
+    reps = client.put(f"/api/todos/{to_id}", json={"title": "title1"}, headers=auth_headers)
+    data = client.get("/api/todos", headers=auth_headers).get_json()
+    assert reps.status_code == 200
+    assert data.get("items")[0].get('title') == "title1"
+
+def test_delete_todo(client, auth_headers):
+    client.post("/api/todos", json={"title": "title1"}, headers=auth_headers)
+    data = client.get("/api/todos", headers=auth_headers).get_json()
+    to_id = data.get("items")[0].get('id')
+    reps = client.delete(f"/api/todos/{to_id}", headers=auth_headers)
+    data = client.get("/api/todos", headers=auth_headers).get_json()
+    assert reps.status_code == 204
+    assert data["total"] == 0

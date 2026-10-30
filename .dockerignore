@@ -1,0 +1,9 @@
+# 这些文件不进入镜像——既减小体积，也防止敏感信息泄漏
+__pycache__/
+*.pyc
+.git/
+venv/
+tests/
+*.log
+.env          # 密钥绝不能进镜像！
+.DS_Store
